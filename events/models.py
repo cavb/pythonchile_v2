@@ -4,6 +4,7 @@ from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core import blocks
 from wagtail.core.models import Page
 from wagtail.core.fields import StreamField
+from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailcodeblock.blocks import CodeBlock
 
@@ -34,7 +35,13 @@ class EventPage(CustomPage):
     is_meetup = models.BooleanField('Evento de meetup', default=False)
     event_url = models.URLField('URL', max_length=250, blank=True, null=True)
     description = models.TextField('Descripción', blank=True)
-    image = models.ImageField('Imagen principal', blank=True, null=True)
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
     meetup_image_url = models.URLField('Meetup image url', blank=True, null=True)
 
     editor_features = ['h2', 'h3', 'h4', 'bold', 'italic', 'link', 'code',
@@ -51,7 +58,10 @@ class EventPage(CustomPage):
     content_panels = Page.content_panels + [
         FieldPanel('description', classname='full'),
         FieldPanel('date'),
-        FieldPanel('image'),
+        ImageChooserPanel('image'),
+        FieldPanel('event_url'),
+        FieldPanel('is_meetup'),
+        FieldPanel('meetup_image_url'),
         StreamFieldPanel('body')
     ]
 

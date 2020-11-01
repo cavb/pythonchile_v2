@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static wagtailimages_tags %}
 
 {% block body_class %}template-blog-page{% endblock %}
 
@@ -41,8 +41,15 @@
                             <p><small class="text-muted">{{ event.date }}</small></p>
                         </div>
                     </div>
-                    <div class="col-md-4 image-wrapper">
-                        <img class="event-image" src="{{ event.meetup_image_url }}" class="card-img" style="vertical-align: middle;display: inline-block;position: relative;" alt="...">
+
+
+
+                    <div class="col-md-4 image-wrapper"><img class="event-image" src="{% if event.image %}
+                        {% image event.image width-355 as event_image  %}
+                        {{ event_image.url }}
+                    {% elif event.meetup_image_url %}
+                        {{ event.meetup_image_url }}
+                    {% endif %}" class="card-img" style="vertical-align: middle;display: inline-block;position: relative;" alt="...">
                     </div>
                 </div>
               </div>
